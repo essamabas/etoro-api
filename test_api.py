@@ -5,17 +5,25 @@ import json
 import os
 import logging
 
+# Issues: 
+# - HTTSPConnection: Max retries exceed wit url ...
+#   https://github.com/conda/conda/issues/4930
+
+TRADE_MODE = 'Demo'
 
 class broker():
 
 
     # Positions
     def get_positions(self):
+
         headers = {
-            'mode': 'Demo',
+            'accept': '*/*',
+            'mode': TRADE_MODE,
         }
 
-        response = requests.get('https://localhost:8088/etoro-api/positions')
+        response = requests.get('http://localhost:8088/etoro-api/positions/', headers=headers)
+
         if response.status_code ==  requests.codes.ok:
             logging.info(response.text)
             #data_json = json.loads(data)
@@ -24,12 +32,12 @@ class broker():
 
     def open_position(self, trade_type, 
                          instrument_id, stock_symbol, 
-                         amount , leverage=0, 
+                         amount , leverage=1, 
                          stop_loss_limit=0, take_profit=0):
 
         headers = {
             'accept': '*/*',
-            'mode': 'Demo',
+            'mode': TRADE_MODE,
             'Content-Type': 'application/json',
         }
 
@@ -41,11 +49,22 @@ class broker():
         else:
             logging.warning("status-code:= "+ str(response.status_code) + "\n response.text:= "+ response.text)  
 
+    def close_position(self, position_id):
+        headers = {
+            'mode': TRADE_MODE,
+        }
+
+        params = (
+            ('id', str(position_id)),
+        )
+
+        response = requests.delete('http://localhost:8088/etoro-api/positions/close', headers=headers, params=params)
+
     # WatchLists
     def get_watchlist(self):
         headers = {
             'cache-control': 'no-cache',
-            'mode': 'Demo',
+            'mode': TRADE_MODE,
         }
         response = requests.get('http://localhost:8088/etoro-api/watchlist', headers=headers)
         if response.status_code ==  requests.codes.ok:
@@ -80,7 +99,7 @@ def main():
                          amount= 100)
 
     
-    mBroker.add_to_watchlist("Oil")
+    mBroker.add_to_watchlist("btc")
     
     pass
 
