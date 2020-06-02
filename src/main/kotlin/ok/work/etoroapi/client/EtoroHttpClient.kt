@@ -41,7 +41,7 @@ data class ViewContext(val ClientViewRate: Double)
 data class EtoroPosition(val PositionID: String?, val InstrumentID: String, val IsBuy: Boolean, val Leverage: Int,
                          val StopLossRate: Double, val TakeProfitRate: Double, val IsTslEnabled: Boolean,
                          val View_MaxPositionUnits: Int, val View_Units: Double, val View_openByUnits: Boolean?,
-                         val Amount: Int, val ViewRateContext: ViewContext?, val OpenDateTime: String?, val isDiscounted: Boolean?)
+                         val Amount: Int, val ViewRateContext: ViewContext?, val OpenDateTime: String?, val IsDiscounted: Boolean?)
 
 data class AssetInfoRequest(val instrumentIds: Array<String>)
 
@@ -141,19 +141,6 @@ class EtoroHttpClient {
 
     }
 
-//    fun closePosition(id: String, mode: TradingMode) {
-////     //   restTemplate.exchange("sapi/trade-${mode.name.toLowerCase()}/positions/$id?PositionID=$id&client_request_id=${authorizationContext.requestId}", HttpEntity("{}"), HttpMethod.DELETE, null)
-//        val req = prepareRequest("sapi/trade-${mode.name.toLowerCase()}/positions/$id?PositionID=$id&client_request_id=${authorizationContext.requestId}",
-//                authorizationContext.exchangeToken, mode, metadataService.getMetadata())
-//                .DELETE()
-//                .build()
-//
-//        val code = client.send(req, HttpResponse.BodyHandlers.ofString()).statusCode()
-//
-//        if (code != 200) {
-//            throw RuntimeException("Failed close positionID $id")
-//        }
-//    }
 
     fun deletePosition(id: String, mode: TradingMode) {
         val req = prepareOkRequest("sapi/trade-${mode.name.toLowerCase()}/positions/$id?PositionID=$id&client_request_id=${authorizationContext.requestId}",  authorizationContext.exchangeToken, mode, metadataService.getMetadata())
